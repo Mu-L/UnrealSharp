@@ -44,7 +44,7 @@ public static class BuildSolutionAction
             buildSolutionProcess.StartInfo.ArgumentList.Add($"\"{folder}\"");
         
             buildSolutionProcess.StartInfo.ArgumentList.Add("--configuration");
-            buildSolutionProcess.StartInfo.ArgumentList.Add(parameters.BuildConfig.ToString().ToLowerInvariant());
+            buildSolutionProcess.StartInfo.ArgumentList.Add(parameters.BuildConfig.GetDotNetBuildConfiguration());
         
             foreach (string extraArgument in parameters.ExtraArguments)
             {

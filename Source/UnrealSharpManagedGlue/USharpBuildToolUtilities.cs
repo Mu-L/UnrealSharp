@@ -22,7 +22,7 @@ public static class USharpBuildToolUtilities
 
     public static void CompileUSharpBuildTool()
     {
-        Console.WriteLine("Compiling USharpBuildTool...");
+        ConsoleUtilities.Log("Compiling USharpBuildTool...");
         
         string uSharpBuildToolDirectory = Path.Combine(GeneratorStatics.ManagedPath, "UnrealSharpPrograms");
         

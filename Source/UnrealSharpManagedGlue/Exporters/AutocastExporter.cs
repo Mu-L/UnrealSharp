@@ -22,7 +22,7 @@ public static class AutocastExporter
         value.Add(function);
     }
     
-    public static void StartExportingAutocastFunctions()
+    public static void BindAutocasts()
     {
         foreach (KeyValuePair<UhtStruct, List<UhtFunction>> pair in ExportedAutocasts)
         {

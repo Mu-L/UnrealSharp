@@ -24,6 +24,10 @@ public enum TargetArchitecture
 
 public enum TargetConfiguration
 {
+    Unknown,
     Debug,
-    Release,
+    DebugGame,
+    Development,
+    Shipping,
+    Test
 }

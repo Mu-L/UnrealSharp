@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using EpicGames.UHT.Tables;
 using EpicGames.UHT.Utils;
-using UnrealBuildTool;
 using UnrealSharp.Shared;
+using UnrealSharpManagedGlue;
 using UnrealSharpManagedGlue.Utilities;
-
-namespace UnrealSharpManagedGlue;
 
 [UnrealHeaderTool]
 public static class Program
@@ -15,31 +12,49 @@ public static class Program
     [UhtExporter(Name = "UnrealSharpCore", Description = "Exports C++ to C# code", Options = UhtExporterOptions.Default, ModuleName = "UnrealSharpCore")]
     private static void Main(IUhtExportFactory factory)
     {
-        Console.WriteLine("Initializing C# exporter...");
         GeneratorStatics.Initialize(factory);
         USharpBuildToolUtilities.CompileUSharpBuildTool();
-            
+        
+        ExportBindings();
+        PostExport();
+    }
+
+    private static void ExportBindings()
+    {
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        ConsoleUtilities.Log("Starting C# bindings export...");
+
         try
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            CSharpExporter.StartExport();
+            GlueGenerator.GenerateBindings();
+            
+            TaskManager.WaitForTasks();
+            
             FileExporter.CleanOldExportedFiles();
-            
+
             stopwatch.Stop();
-            Console.WriteLine($"Exporting completed in {stopwatch.Elapsed.Seconds} seconds.");
             
-            GlueModuleFactory.CreateGlueProjects();
-            
-            if (GeneratorStatics.BuildTarget == TargetType.Editor && CSharpExporter.HasModifiedEngineGlue)
-            {
-                Console.WriteLine("Engine glue has been modified since the last build. Rebuilding UnrealSharp bindings...");
-                DotNetUtilities.BuildSolution(Path.Combine(GeneratorStatics.ManagedPath, "UnrealSharp"));
-            }
+            string timeString = stopwatch.Elapsed.TotalSeconds < 1 ? $"{stopwatch.Elapsed.TotalMilliseconds:F0}ms" : $"{stopwatch.Elapsed.TotalSeconds:F2}s";
+            ConsoleUtilities.Log($"Finished exporting C# bindings in {timeString}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred during the export process:");
-            Console.WriteLine(ex);
+            ConsoleUtilities.Log("Critical failure during export process:");
+            ConsoleUtilities.Log(ex.ToString());
+        }
+    }
+
+    private static void PostExport()
+    {
+        try
+        {
+            GlueModuleFactory.CreateGlueProjects();
+            BuildUtilities.BuildBindings();
+        }
+        catch (Exception ex)
+        {
+            ConsoleUtilities.Log("Critical failure during post-export process:");
+            ConsoleUtilities.Log(ex.Message);
         }
     }
 }

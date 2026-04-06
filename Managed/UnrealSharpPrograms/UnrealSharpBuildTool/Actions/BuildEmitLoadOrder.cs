@@ -41,7 +41,7 @@ public static class BuildEmitLoadOrderAction
 
         BuildSolutionParameters buildParameters = new BuildSolutionParameters
         {
-            BuildConfig = TargetConfiguration.Debug,
+            BuildConfig = TargetConfiguration.DebugGame,
             Publish = true,
             Folders = [Program.GetScriptFolder()],
             ExtraArguments = extraArguments ?? new Collection<string>()

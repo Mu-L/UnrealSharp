@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EpicGames.UHT.Types;
+using UnrealSharp.Shared;
 using UnrealSharpManagedGlue.Utilities;
 
 namespace UnrealSharpManagedGlue;
@@ -72,13 +73,13 @@ public static class GlueModuleFactory
                 throw new InvalidOperationException($"Failed to create project file at {csprojPath}");
             }
             
-            Console.WriteLine($"Successfully created project file: {projectName}");
+            ConsoleUtilities.Log($"Successfully created project file: {projectName}");
             
             createdNewModule = true;
         }
         else
         {
-            Console.WriteLine($"Project file already exists: {projectName}. Skipping creation.");
+            ConsoleUtilities.Log($"Project file already exists: {projectName}. Skipping creation.");
         }
         
         AddPluginDependencies(projectName, csprojPath, dependencyPaths, createdNewModule);
@@ -97,7 +98,7 @@ public static class GlueModuleFactory
         {
             if (existingDependencies.OrderBy(d => d).SequenceEqual(pluginDependencies.OrderBy(d => d)))
             {
-                Console.WriteLine($"No changes in dependencies for project {projectName}. Skipping update.");
+                ConsoleUtilities.Log($"No changes in dependencies for project {projectName}. Skipping update.");
                 return;
             }
         }
@@ -119,6 +120,6 @@ public static class GlueModuleFactory
             throw new InvalidOperationException($"Failed to update project dependencies for {projectPath}");
         }
         
-        Console.WriteLine($"Updated project dependencies for {projectName}");
+        ConsoleUtilities.Log($"Updated project dependencies for {projectName}");
     }
 }

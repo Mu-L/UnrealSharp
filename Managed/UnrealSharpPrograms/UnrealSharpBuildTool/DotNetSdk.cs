@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace UnrealSharpBuildTool;
 
 public static class DotNetSdk
@@ -62,5 +64,36 @@ public static class DotNetSdk
         }
         
         return result;
+    }
+    
+    public static string GetDotNetBuildConfiguration(this TargetConfiguration configuration)
+    {
+        if (configuration == TargetConfiguration.Debug || configuration == TargetConfiguration.DebugGame)
+        {
+            return "Debug";
+        }
+
+        if (configuration == TargetConfiguration.Development || configuration == TargetConfiguration.Test || configuration == TargetConfiguration.Shipping)
+        {
+            return "Release";
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(configuration), configuration, "Unsupported configuration");
+    }
+    
+    public static string GetAssemblyExtension()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return ".dll";
+        }
+        else if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+        {
+            return ".so";
+        }
+        else
+        {
+            throw new PlatformNotSupportedException("Unsupported platform");
+        }
     }
 }

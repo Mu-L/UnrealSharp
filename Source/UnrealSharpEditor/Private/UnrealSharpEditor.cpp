@@ -25,6 +25,7 @@
 #include "UnrealSharpUtils.h"
 #include "HotReload/CSHotReloadSubsystem.h"
 #include "Containers/Set.h"
+#include "Settings/PlatformsMenuSettings.h"
 
 #define LOCTEXT_NAMESPACE "FUnrealSharpEditorModule"
 
@@ -452,24 +453,35 @@ void FUnrealSharpEditorModule::PackageProject()
 		return;
 	}
 
-	FString ExecutablePath = ArchiveDirectory / FApp::GetProjectName() + ".exe";
+	FString ExecutablePath = ArchiveDirectory / FApp::GetProjectName() + TEXT(".exe");
 	if (!FPaths::FileExists(ExecutablePath))
 	{
-		FString DialogText = FString::Printf(
-			TEXT(
-				"The executable for project '%s' could not be found in the directory: %s. Please select the root directory where you packaged your game."),
-			FApp::GetProjectName(), *ArchiveDirectory);
+		FString DialogText = FString::Printf(TEXT("The executable for project '%s' could not be found in the directory: %s. Please select the root directory where you packaged your game."), FApp::GetProjectName(), *ArchiveDirectory);
 		FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(DialogText));
 		return;
 	}
 
 	FScopedSlowTask Progress(1, LOCTEXT("USharpPackaging", "Packaging Project..."));
 	Progress.MakeDialog();
-
+	
+	const UPlatformsMenuSettings* PlatformsSettings = GetDefault<UPlatformsMenuSettings>();
+	const UProjectPackagingSettings* PlatformsPackagingSettings = GetDefault<UProjectPackagingSettings>();
+	
 	TMap<FString, FString> Arguments;
-	Arguments.Add("ArchiveDirectory", FCSUnrealSharpUtils::MakeQuotedPath(ArchiveDirectory));
-	Arguments.Add("BuildConfig", "Release");
-	Arguments.Add("UETargetType", "Game");
+	Arguments.Add(TEXT("ArchiveDirectory"), FCSUnrealSharpUtils::MakeQuotedPath(ArchiveDirectory));
+	
+	int32 BuildConfigValue = static_cast<int32>(PlatformsPackagingSettings->BuildConfiguration);
+	UProjectPackagingSettings::FConfigurationInfo ConfigurationInfo = UProjectPackagingSettings::ConfigurationInfo[BuildConfigValue];
+	Arguments.Add(TEXT("UEBuildConfig"), ConfigurationInfo.Name.ToString());
+	
+	FString Architecture = PlatformsSettings->GetArchitectureForPlatform(PlatformsSettings->CookPlatform);
+	Arguments.Add(TEXT("TargetArchitecture"), TEXT("x64"));
+	
+	Arguments.Add(TEXT("UETargetType"), TEXT("Game"));
+	
+	Arguments.Add(TEXT("TargetPlatform"), PlatformsSettings->CookPlatform.ToString());
+	Arguments.Add(TEXT("NativeAOT"), TEXT("true"));
+	
 	UCSProcUtilities::InvokeUnrealSharpBuildTool(BUILD_ACTION_PACKAGE_PROJECT, Arguments);
 
 	FNotificationInfo Info(

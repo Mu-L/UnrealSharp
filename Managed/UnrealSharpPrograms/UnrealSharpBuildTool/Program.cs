@@ -107,7 +107,7 @@ public static class Program
     {
         string architectureString = architecture.GetTargetArchitecture();
         string platformString = configuration.GetTargetPlatform();
-        string buildConfigString = targetConfiguration.ToString().ToLowerInvariant();
+        string buildConfigString = targetConfiguration.GetDotNetBuildConfiguration();
         return Path.Combine(IntermediateBuildDirectory, architectureString, platformString, buildConfigString);
     }
     

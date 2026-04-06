@@ -110,6 +110,5 @@ public static class ScriptGeneratorUtilities
         int delimiterIndex = enumValue.Name.IndexOf("::", StringComparison.Ordinal);
         return delimiterIndex < 0 ? enumValue.Name : enumValue.Name.Substring(delimiterIndex + 2);
     }
-                }
-
+    
 }

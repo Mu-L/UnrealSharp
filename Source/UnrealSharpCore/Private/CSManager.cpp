@@ -157,11 +157,9 @@ void UCSManager::Initialize()
 		return;
 	}
 
-#if WITH_EDITOR
 	// Remove this listener when the engine is shutting down.
 	// Otherwise, we'll get a crash when the GC cleans up all the UObject.
 	FCoreDelegates::OnPreExit.AddUObject(this, &UCSManager::OnEnginePreExit);
-#endif
 
 	GUObjectArray.AddUObjectDeleteListener(this);
 	FModuleManager::Get().OnModulesChanged().AddUObject(this, &UCSManager::OnModulesChanged);

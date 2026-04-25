@@ -1,6 +1,7 @@
 #include "CSGlobalSettingsUtilities.h"
 #include "CSPathsBlueprintFunctionLibrary.h"
 #include "UnrealSharpUtilities.h"
+#include "Logging/StructuredLog.h"
 
 static TMap<FString, TSharedPtr<FJsonValue>> Config;
 

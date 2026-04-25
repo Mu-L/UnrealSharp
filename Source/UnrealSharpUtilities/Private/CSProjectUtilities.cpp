@@ -4,6 +4,7 @@
 #include "CSPathsUtilities.h"
 #include "UnrealSharpUtilities.h"
 #include "Interfaces/IPluginManager.h"
+#include "Logging/StructuredLog.h"
 
 void UnrealSharp::Project::GetProjectNamesByLoadOrder(TArray<FString>& UserProjectNames, bool bIncludeGlue)
 {

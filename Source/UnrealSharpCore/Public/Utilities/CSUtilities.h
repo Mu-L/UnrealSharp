@@ -3,6 +3,7 @@
 #include "CSFieldName.h"
 #include "CSFieldType.h"
 #include "UnrealSharpCore.h"
+#include "Logging/StructuredLog.h"
 
 struct FCSManagedTypeDefinition;
 class UCSManagedAssembly;

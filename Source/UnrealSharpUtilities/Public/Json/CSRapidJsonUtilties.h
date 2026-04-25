@@ -1,6 +1,7 @@
 #pragma once
 
-#include "JsonUtils/RapidJsonUtils.h"
+#include <rapidjson/document.h>
+#include <rapidjson/encodings.h>
 
 namespace UnrealSharp::RapidJson
 {

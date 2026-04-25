@@ -5,6 +5,7 @@
 #include "CSProjectUtilities.h"
 #include "UnrealSharpUtilities.h"
 #include "Interfaces/IPluginManager.h"
+#include "Logging/StructuredLog.h"
 
 FString UnrealSharp::Paths::GetDotNetDirectory()
 {

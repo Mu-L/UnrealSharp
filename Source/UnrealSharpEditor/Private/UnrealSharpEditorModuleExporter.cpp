@@ -1,6 +1,7 @@
 #include "UnrealSharpEditorModuleExporter.h"
 #include "CSProjectUtilities.h"
 #include "HotReload/CSHotReloadSubsystem.h"
+#include "Logging/StructuredLog.h"
 
 void UFUnrealSharpEditorModuleExporter::InitializeUnrealSharpEditorCallbacks(FCSManagedEditorCallbacks Callbacks)
 {

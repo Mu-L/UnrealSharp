@@ -2,6 +2,7 @@
 
 #include "CSPathsUtilities.h"
 #include "UnrealSharpUtilities.h"
+#include "Logging/StructuredLog.h"
 
 bool UnrealSharp::Process::InvokeCommand(const FString& ProgramPath, const FString& Arguments, int32& OutReturnCode, FString& Output, const FString* InWorkingDirectory, const FCSCommandError& OnError)
 {

@@ -4,7 +4,7 @@
 bool UnrealSharp::RapidJson::ParseJsonString(TCHAR* JsonText, FDocument& OutDocument)
 {
 	rapidjson::GenericInsituStringStream<rapidjson::UTF16LE<TCHAR>> Stream(JsonText);
-	
+
 	FDocument Result;
 	Result.ParseStream<rapidjson::kParseInsituFlag>(Stream);
 	
@@ -35,7 +35,6 @@ TOptional<TStringView<TCHAR>> UnrealSharp::RapidJson::GetStringField(FConstObjec
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid string field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -48,7 +47,6 @@ TOptional<bool> UnrealSharp::RapidJson::GetBoolField(FConstObject Object, const 
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid bool field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -61,7 +59,6 @@ TOptional<int32> UnrealSharp::RapidJson::GetInt32Field(FConstObject Object, cons
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid int32 field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -74,7 +71,6 @@ TOptional<uint32> UnrealSharp::RapidJson::GetUint32Field(FConstObject Object, co
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid uint32 field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -87,7 +83,6 @@ TOptional<int64> UnrealSharp::RapidJson::GetInt64Field(FConstObject Object, cons
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid int64 field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -100,7 +95,6 @@ TOptional<uint64> UnrealSharp::RapidJson::GetUint64Field(FConstObject Object, co
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid uint64 field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -113,7 +107,6 @@ TOptional<float> UnrealSharp::RapidJson::GetFloatField(FConstObject Object, cons
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid float field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -126,7 +119,6 @@ TOptional<double> UnrealSharp::RapidJson::GetDoubleField(FConstObject Object, co
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid double field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -139,7 +131,6 @@ TOptional<FConstObject> UnrealSharp::RapidJson::GetObjectField(FConstObject Obje
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid object field '{0}'", FieldName);
 		return {};
 	}
 	
@@ -152,7 +143,6 @@ TOptional<FConstArray> UnrealSharp::RapidJson::GetArrayField(FConstObject Object
 	
 	if (!FoundMember.IsSet())
 	{
-		UE_LOGFMT(LogCSJsonUtilties, Error, "Missing or invalid array field '{0}'", FieldName);
 		return {};
 	}
 	

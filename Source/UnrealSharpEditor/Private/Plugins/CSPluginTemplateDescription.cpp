@@ -1,6 +1,6 @@
 ﻿#include "Plugins/CSPluginTemplateDescription.h"
 
-#include "CSCommonUnrealSharpSettings.h"
+#include "CSCommonGlobalSettings.h"
 #include "UnrealSharpEditor.h"
 #include "Interfaces/IPluginManager.h"
 
@@ -10,7 +10,7 @@ void FCSPluginTemplateDescription::OnPluginCreated(const TSharedPtr<IPlugin> New
     FPluginTemplateDescription::OnPluginCreated(NewPlugin);
 
     const FString ModuleName = FString::Printf(TEXT("Managed%s"), *NewPlugin->GetName());
-    const FString ProjectPath = NewPlugin->GetBaseDir() / FCSCommonUnrealSharpSettings::GetScriptDirectoryName();
+    const FString ProjectPath = NewPlugin->GetBaseDir() / UnrealSharp::GlobalSettings::Common::GetScriptDirectoryName();
     const FString GlueProjectName = FString::Printf(TEXT("%s.Glue"), *NewPlugin->GetName());
 
     if (bRequiresGlue)

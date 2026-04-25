@@ -1,6 +1,5 @@
 #include "UnrealSharpEditorModuleExporter.h"
-#include "CSManager.h"
-#include "CSProcUtilities.h"
+#include "CSProjectUtilities.h"
 #include "HotReload/CSHotReloadSubsystem.h"
 
 void UFUnrealSharpEditorModuleExporter::InitializeUnrealSharpEditorCallbacks(FCSManagedEditorCallbacks Callbacks)
@@ -10,7 +9,7 @@ void UFUnrealSharpEditorModuleExporter::InitializeUnrealSharpEditorCallbacks(FCS
 
 void UFUnrealSharpEditorModuleExporter::GetProjectPaths(TArray<FString>* Paths)
 {
-	UCSProcUtilities::GetAllProjectPaths(*Paths, true);
+	UnrealSharp::Project::GetAllProjectPaths(*Paths, true);
 }
 
 void UFUnrealSharpEditorModuleExporter::DirtyUnrealType(const char* AssemblyName, const char* Namespace, const char* TypeName, ECSTypeStructuralFlags Flags)

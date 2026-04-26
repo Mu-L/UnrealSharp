@@ -60,6 +60,9 @@ public static class DotNetSdk
             case TargetArchitecture.ARM64:
                 result = "arm64";
                 break;
+            case TargetArchitecture.AnyCPU:
+                result = "anycpu";
+                break;
             default: throw new ArgumentOutOfRangeException(nameof(architecture), architecture, "Unsupported architecture");
         }
         

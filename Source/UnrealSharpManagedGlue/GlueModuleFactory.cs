@@ -65,8 +65,12 @@ public static class GlueModuleFactory
                 new("SkipSolutionGeneration", "true"),
                 new("SkipUSharpProjSetup", "true"),
                 new("ProjectRoot", projectRoot),
-                new("EditorOnly", package.IsEditorOnly().ToString()),
             };
+
+            if (package.IsEditorOnly())
+            {
+                arguments.Add(new KeyValuePair<string, string>("EditorOnly", "true"));
+            }
             
             if (!USharpBuildToolUtilities.InvokeUSharpBuildTool("GenerateProject", arguments))
             {

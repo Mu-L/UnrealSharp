@@ -252,7 +252,12 @@ void SCSNewProjectDialog::OnFinish()
     }
 	
 	TMap<FString, FString> Arguments;
-	Arguments.Add(TEXT("EditorOnly"), EditorOnlyCheckBox->IsChecked() ? TEXT("true") : TEXT("false"));
+	
+	if (EditorOnlyCheckBox->IsChecked())
+	{
+		Arguments.Add(TEXT("EditorOnly"), TEXT("true"));
+	}
+	
 	Arguments.Add(TEXT("CreateModuleClass"), TEXT("true"));
 	
 	FString ModuleName = NameTextBox->GetText().ToString();

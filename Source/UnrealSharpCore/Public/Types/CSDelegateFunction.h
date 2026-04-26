@@ -8,7 +8,7 @@
 #include "CSDelegateFunction.generated.h"
 
 UCLASS()
-class UCSDelegateFunction : public UDelegateFunction, public ICSManagedTypeInterface
+class UCSDelegateFunction : public UFunction, public ICSManagedTypeInterface
 {
 	GENERATED_BODY()
 };

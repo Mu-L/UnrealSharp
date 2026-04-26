@@ -25,7 +25,7 @@ public struct GenerateProjectParameters
         
     [Option("SkipUSharpProjSetup", Required = false, Default = false, HelpText = "If true, the generated .csproj file will not be modified to include UnrealSharp properties and dependencies. Defaults to false.")]
     public bool SkipUSharpProjSetup { get; set; }
-        
+
     [Option("EditorOnly", Required = false, Default = false, HelpText = "If true, the generated project will be marked as not publishable. Defaults to false.")]
     public bool EditorOnly { get; set; }
         
@@ -90,7 +90,7 @@ public static class GenerateProjectAction
         return true;
     }
 
-    private static void ModifyModuleFile(string projectPath, string projectFolder, IEnumerable<string>? dependencies, bool IsEditorOnly)
+    private static void ModifyModuleFile(string projectPath, string projectFolder, IEnumerable<string>? dependencies, bool isEditorOnly)
     {
         try
         {
@@ -104,7 +104,8 @@ public static class GenerateProjectAction
                 csprojDocument.DocumentElement!.AppendChild(newItemGroup);
             }
 
-            csprojDocument.SetProjectProperty("IsPublishable", (!IsEditorOnly).ToString());
+            string isPublishable = isEditorOnly ? "false" : "true";
+            csprojDocument.SetProjectProperty("IsPublishable", isPublishable);
 
             string unrealSharpPluginPath = Program.GetUnrealSharpSharedProps();
             string relativeUnrealSharpPath = GetRelativePath(projectFolder, unrealSharpPluginPath);
@@ -137,9 +138,7 @@ public static class GenerateProjectAction
 
     public static string GetRelativePath(string basePath, string targetPath)
     {
-        Uri baseUri = new Uri(basePath.EndsWith(Path.DirectorySeparatorChar.ToString())
-                ? basePath
-                : basePath + Path.DirectorySeparatorChar);
+        Uri baseUri = new Uri(basePath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? basePath : basePath + Path.DirectorySeparatorChar);
         Uri targetUri = new Uri(targetPath);
         Uri relativeUri = baseUri.MakeRelativeUri(targetUri);
         return OperatingSystem.IsWindows() ? Uri.UnescapeDataString(relativeUri.ToString()).Replace('/', '\\') : Uri.UnescapeDataString(relativeUri.ToString());

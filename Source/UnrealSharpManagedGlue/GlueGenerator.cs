@@ -14,6 +14,7 @@ public static class GlueGenerator
         ConsoleUtilities.Log("Generating C# bindings...");
 
         PackageExporter.ExportPackages();
+        TaskManager.WaitForTasks();
         
         PreprocessorExporter.ExportBuildDefines();
         

@@ -415,10 +415,7 @@ public class FunctionExporter
     {
         foreach (KeyValuePair<UhtPackage, List<ExtensionMethod>> extensionInfo in ExtensionMethods)
         {
-            TaskManager.StartTask(_ =>
-            {
-                ExtensionsClassExporter.ExportExtensionsClass(extensionInfo.Key, extensionInfo.Value); 
-            });
+            ExtensionsClassExporter.ExportExtensionsClass(extensionInfo.Key, extensionInfo.Value); 
         }
     }
     

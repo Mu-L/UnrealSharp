@@ -151,10 +151,10 @@ public static class ClassExporter
         }
     }
     
-    static void ExportClassFunctions(UhtClass owner, GeneratorStringBuilder builder, List<UhtFunction> exportedFunctions,
-                                     HashSet<string> exportedFunctionNames)
+    static void ExportClassFunctions(UhtClass owner, GeneratorStringBuilder builder, List<UhtFunction> exportedFunctions, HashSet<string> exportedFunctionNames)
     {
         bool isBlueprintFunctionLibrary = owner.IsChildOf(GeneratorStatics.BlueprintFunctionLibrary);
+        
         foreach (UhtFunction function in exportedFunctions)
         {
             if (function.HasAllFlags(EFunctionFlags.Static) && isBlueprintFunctionLibrary)

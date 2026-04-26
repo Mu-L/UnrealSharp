@@ -45,10 +45,10 @@ public static class PackageProjectAction
         }
         
         string bindingsPath = Path.Combine(BuildToolOptions.Instance.PluginDirectory, "Managed", "UnrealSharp");
-        string buildOutput = Program.GetIntermediateBuildPathForPlatform(
-            parameters.TargetArchitecture,
-            parameters.TargetPlatform,
-            parameters.UEBuildConfig);
+        string buildOutput = Program.GetIntermediateBuildPathForPlatform(parameters.TargetArchitecture, parameters.TargetPlatform, parameters.UEBuildConfig);
+        
+        string rootProjectPath = Path.Combine(parameters.ArchiveDirectory, BuildToolOptions.Instance.ProjectName);
+        string publishFolder = Program.GetOutputPath(rootProjectPath);
         
         Collection<string> extraArguments =
         [
@@ -63,7 +63,7 @@ public static class PackageProjectAction
             $"-p:UETargetType={UETargetType}",
             $"-p:UEBuildConfig={parameters.UEBuildConfig}",
             
-            $"-p:PublishDir=\"{parameters.ArchiveDirectory}\"",
+            $"-p:PublishDir=\"{publishFolder}\"",
             $"-p:OutputPath=\"{buildOutput}\"",
         ];
         
@@ -81,10 +81,6 @@ public static class PackageProjectAction
         };
         
         BuildSolutionAction.BuildSolution(buildParameters);
-        
-        if (parameters.NativeAOT)
-        {
-            // In progress
-        }
+        BuildEmitLoadOrderAction.EmitLoadOrder(publishFolder, publishFolder);
     }
 }

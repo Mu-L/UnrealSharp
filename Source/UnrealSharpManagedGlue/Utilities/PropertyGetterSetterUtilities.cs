@@ -24,20 +24,24 @@ public static class PropertyGetterSetterUtilities
         propertyName = NameMapper.EscapeKeywords(propertyName);
 
         UhtClass owningClass = (UhtClass)function.Outer!;
+
         UhtFunction? sameNameFunction = owningClass.FindFunctionByName(propertyName);
         if (sameNameFunction != null && sameNameFunction != function)
         {
             return false;
         }
-
-        UhtProperty? propertyWithSameName = owningClass.FindPropertyByName(propertyName, (property, name) => property.SourceName == name || property.GetPropertyName() == name);
-        UhtProperty primaryProperty = GetPrimaryProperty(function);
         
+        UhtProperty? propertyWithSameName = owningClass.FindPropertyByName(propertyName, (property, name) =>
+        {
+            return property.SourceName == name || property.GetPropertyName() == name;
+        });
+        
+        UhtProperty primaryProperty = GetPrimaryProperty(function);
         if (propertyWithSameName != null && (!propertyWithSameName.IsSameType(primaryProperty) || propertyWithSameName.HasAnyGetter() || propertyWithSameName.HasAnySetter()))
         {
             return false;
         }
-
+        
         if (!getterSetterPairs.TryGetValue(propertyName, out GetterSetterPair? pair))
         {
             pair = new GetterSetterPair(propertyName, primaryProperty);
@@ -48,18 +52,36 @@ public static class PropertyGetterSetterUtilities
         {
             return true;
         }
+        
+        UhtFunction? counterpart = FindCounterpart(owningClass, propertyName, isGetter);
 
         if (isGetter)
         {
             pair.Getter = function;
-            pair.GetterExporter = GetterSetterFunctionExporter.Create(function, primaryProperty, GetterSetterMode.Get, EFunctionProtectionMode.UseUFunctionProtection);
+            pair.GetterExporter = CreateAccessorExporter(function, primaryProperty, GetterSetterMode.Get);
+
+            if (counterpart == null || pair.Setter != null)
+            {
+                return true;
+            }
+            
+            pair.Setter = counterpart;
+            pair.SetterExporter = CreateAccessorExporter(counterpart, primaryProperty, GetterSetterMode.Set);
         }
         else
         {
             pair.Setter = function;
-            pair.SetterExporter = GetterSetterFunctionExporter.Create(function, primaryProperty, GetterSetterMode.Set, EFunctionProtectionMode.UseUFunctionProtection);
+            pair.SetterExporter = CreateAccessorExporter(function, primaryProperty, GetterSetterMode.Set);
+
+            if (counterpart == null || pair.Getter != null)
+            {
+                return true;
+            }
+            
+            pair.Getter = counterpart;
+            pair.GetterExporter = CreateAccessorExporter(counterpart, primaryProperty, GetterSetterMode.Get);
         }
-        
+
         return true;
     }
 
@@ -89,6 +111,23 @@ public static class PropertyGetterSetterUtilities
         UhtProperty? property = function.Properties.FirstOrDefault();
         return property != null && function.Properties.Count() == 1 && (!property.HasAllFlags(EPropertyFlags.OutParm | EPropertyFlags.ReferenceParm) || property.HasAllFlags(EPropertyFlags.ConstParm));
     }
+    
+    static UhtFunction? FindCounterpart(UhtClass owningClass, string propertyName, bool isCurrentGetter)
+    {
+        string counterpartName = (isCurrentGetter ? "Set" : "Get") + propertyName;
+        UhtFunction? candidate = owningClass.FindFunctionByName(counterpartName, includeSuper: true);
+        if (candidate == null)
+        {
+            return null;
+        }
+
+        string scriptName = candidate.GetFunctionName();
+        bool isValid = isCurrentGetter ? CheckIfSetter(scriptName, candidate) : CheckIfGetter(scriptName, candidate);
+        return isValid ? candidate : null;
+    }
+    
+    static GetterSetterFunctionExporter CreateAccessorExporter(UhtFunction function, UhtProperty property, GetterSetterMode mode)
+        => GetterSetterFunctionExporter.Create(function, property, mode, EFunctionProtectionMode.UseUFunctionProtection);
     
     static UhtProperty GetPrimaryProperty(UhtFunction function)
     {

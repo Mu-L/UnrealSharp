@@ -86,7 +86,6 @@ public static class UpdateProjectDependenciesAction
 
     public static string GetRelativePath(string basePath, string targetPath)
     {
-        // Ensure the base path ends with a directory separator
         if (!basePath.EndsWith(Path.DirectorySeparatorChar.ToString()))
         {
             basePath += Path.DirectorySeparatorChar;

@@ -480,11 +480,8 @@ void FUnrealSharpEditorModule::PackageProject()
 	
 	FString Architecture = PlatformsSettings->GetArchitectureForPlatform(PlatformsSettings->CookPlatform);
 	Arguments.Add(TEXT("TargetArchitecture"), TEXT("x64"));
-	
 	Arguments.Add(TEXT("UETargetType"), TEXT("Game"));
-	
 	Arguments.Add(TEXT("TargetPlatform"), PlatformsSettings->CookPlatform.ToString());
-	Arguments.Add(TEXT("NativeAOT"), TEXT("true"));
 	
 	UnrealSharp::Build::InvokeUnrealSharpBuildTool(UnrealSharp::BuildAction::PackageProject, &Arguments);
 

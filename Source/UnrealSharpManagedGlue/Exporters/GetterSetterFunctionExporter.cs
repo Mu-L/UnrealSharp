@@ -1,5 +1,4 @@
-﻿using System;
-using EpicGames.Core;
+﻿using EpicGames.Core;
 using EpicGames.UHT.Types;
 using UnrealSharpManagedGlue.PropertyTranslators;
 using UnrealSharpManagedGlue.SourceGeneration;

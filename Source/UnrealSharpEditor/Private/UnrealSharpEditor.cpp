@@ -468,7 +468,6 @@ void FUnrealSharpEditorModule::PackageProject()
 	FScopedSlowTask Progress(1, LOCTEXT("USharpPackaging", "Packaging Project..."));
 	Progress.MakeDialog();
 	
-	const UPlatformsMenuSettings* PlatformsSettings = GetDefault<UPlatformsMenuSettings>();
 	const UProjectPackagingSettings* PlatformsPackagingSettings = GetDefault<UProjectPackagingSettings>();
 	
 	TMap<FString, FString> Arguments;
@@ -477,11 +476,7 @@ void FUnrealSharpEditorModule::PackageProject()
 	int32 BuildConfigValue = static_cast<int32>(PlatformsPackagingSettings->BuildConfiguration);
 	UProjectPackagingSettings::FConfigurationInfo ConfigurationInfo = UProjectPackagingSettings::ConfigurationInfo[BuildConfigValue];
 	Arguments.Add(TEXT("UEBuildConfig"), ConfigurationInfo.Name.ToString());
-	
-	FString Architecture = PlatformsSettings->GetArchitectureForPlatform(PlatformsSettings->CookPlatform);
-	Arguments.Add(TEXT("TargetArchitecture"), TEXT("x64"));
 	Arguments.Add(TEXT("UETargetType"), TEXT("Game"));
-	Arguments.Add(TEXT("TargetPlatform"), PlatformsSettings->CookPlatform.ToString());
 	
 	UnrealSharp::Build::InvokeUnrealSharpBuildTool(UnrealSharp::BuildAction::PackageProject, &Arguments);
 

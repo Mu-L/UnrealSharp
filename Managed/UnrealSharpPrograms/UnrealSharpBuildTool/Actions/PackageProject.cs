@@ -11,7 +11,7 @@ public struct PackageProjectParameters
     [Option("ArchiveDirectory", Required = true, HelpText = "The directory base directory where the packaged game is located")]
     public string ArchiveDirectory { get; set; }
         
-    [Option("TargetPlatform", Required = true, HelpText = "The target platform for the package")]
+    [Option("TargetPlatform", Required = false, HelpText = "The target platform for the package")]
     public TargetPlatform TargetPlatform { get; set; }
 
     [Option("TargetArchitecture", Required = false, HelpText = "The target architecture for the package")]
@@ -46,7 +46,6 @@ public static class PackageProjectAction
         
         string bindingsPath = Path.Combine(BuildToolOptions.Instance.PluginDirectory, "Managed", "UnrealSharp");
         string buildOutput = Program.GetIntermediateBuildPathForPlatform(parameters.TargetArchitecture, parameters.TargetPlatform, parameters.UEBuildConfig);
-        
         string rootProjectPath = Path.Combine(parameters.ArchiveDirectory, BuildToolOptions.Instance.ProjectName);
         string publishFolder = Program.GetOutputPath(rootProjectPath);
         

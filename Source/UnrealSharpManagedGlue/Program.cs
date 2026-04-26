@@ -17,6 +17,7 @@ public static class Program
         
         ExportBindings();
         
+        FileExporter.CleanOldExportedFiles();
         GlueModuleFactory.CreateGlueProjects();
         BuildUtilities.BuildBindings();
     }
@@ -30,10 +31,7 @@ public static class Program
             Stopwatch stopwatch = Stopwatch.StartNew();
             
             GlueGenerator.GenerateBindings();
-            
             TaskManager.WaitForTasks();
-            
-            FileExporter.CleanOldExportedFiles();
 
             stopwatch.Stop();
             

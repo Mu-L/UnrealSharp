@@ -19,6 +19,8 @@ public static class PackageExporter
         {
             ExportPackage(moduleInfo.Module);
         }
+        
+        TaskManager.WaitForTasks();
     }
     
     private static void ExportPackage(UhtPackage package)

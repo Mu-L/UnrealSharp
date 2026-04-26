@@ -26,10 +26,7 @@ public static class AutocastExporter
     {
         foreach (KeyValuePair<UhtStruct, List<UhtFunction>> pair in ExportedAutocasts)
         {
-            TaskManager.StartTask(_ => 
-            {
-                ExportAutocast(pair.Key, pair.Value);
-            });
+            ExportAutocast(pair.Key, pair.Value);
         }
     }
     

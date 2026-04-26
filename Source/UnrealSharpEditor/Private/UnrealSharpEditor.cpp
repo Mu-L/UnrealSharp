@@ -29,6 +29,7 @@
 #include "UnrealSharpUtils.h"
 #include "HotReload/CSHotReloadSubsystem.h"
 #include "Containers/Set.h"
+#include "Settings/PlatformsMenuSettings.h"
 
 #define LOCTEXT_NAMESPACE "FUnrealSharpEditorModule"
 
@@ -456,29 +457,30 @@ void FUnrealSharpEditorModule::PackageProject()
 		return;
 	}
 
-	FString ExecutablePath = ArchiveDirectory / FApp::GetProjectName() + ".exe";
+	FString ExecutablePath = ArchiveDirectory / FApp::GetProjectName() + TEXT(".exe");
 	if (!FPaths::FileExists(ExecutablePath))
 	{
-		FString DialogText = FString::Printf(
-			TEXT(
-				"The executable for project '%s' could not be found in the directory: %s. Please select the root directory where you packaged your game."),
-			FApp::GetProjectName(), *ArchiveDirectory);
+		FString DialogText = FString::Printf(TEXT("The executable for project '%s' could not be found in the directory: %s. Please select the root directory where you packaged your game."), FApp::GetProjectName(), *ArchiveDirectory);
 		FMessageDialog::Open(EAppMsgType::Ok, FText::FromString(DialogText));
 		return;
 	}
 
 	FScopedSlowTask Progress(1, LOCTEXT("USharpPackaging", "Packaging Project..."));
 	Progress.MakeDialog();
-
+	
+	const UProjectPackagingSettings* PlatformsPackagingSettings = GetDefault<UProjectPackagingSettings>();
+	
 	TMap<FString, FString> Arguments;
-	Arguments.Add("ArchiveDirectory", FCSUnrealSharpUtils::MakeQuotedPath(ArchiveDirectory));
-	Arguments.Add("BuildConfig", "Release");
-	Arguments.Add("UETargetType", "Game");
+	Arguments.Add(TEXT("ArchiveDirectory"), FCSUnrealSharpUtils::MakeQuotedPath(ArchiveDirectory));
+	
+	int32 BuildConfigValue = static_cast<int32>(PlatformsPackagingSettings->BuildConfiguration);
+	UProjectPackagingSettings::FConfigurationInfo ConfigurationInfo = UProjectPackagingSettings::ConfigurationInfo[BuildConfigValue];
+	Arguments.Add(TEXT("UEBuildConfig"), ConfigurationInfo.Name.ToString());
+	Arguments.Add(TEXT("UETargetType"), TEXT("Game"));
+	
 	UnrealSharp::Build::InvokeUnrealSharpBuildTool(UnrealSharp::BuildAction::PackageProject, &Arguments);
 
-	FNotificationInfo Info(
-		FText::FromString(
-			FString::Printf(TEXT("Project '%s' has been packaged successfully."), FApp::GetProjectName())));
+	FNotificationInfo Info(FText::FromString(FString::Printf(TEXT("Project '%s' has been packaged successfully."), FApp::GetProjectName())));
 	Info.ExpireDuration = 15.0f;
 	Info.bFireAndForget = true;
 	Info.ButtonDetails.Add(FNotificationButtonInfo(
@@ -683,10 +685,10 @@ void FUnrealSharpEditorModule::RegisterPluginTemplates()
 	const FText CSharpOnlyDescription = LOCTEXT("UnrealSharp_CSharpOnlyTemplateDesc", "Create a blank plugin that can only contain content and C# scripts.");
 	
     const TSharedRef<FPluginTemplateDescription> BlankTemplate = MakeShared<FCSPluginTemplateDescription>(BlankTemplateName, BlankDescription,
-        PluginBaseDir / TEXT("Templates") / TEXT("Blank"), true, EHostType::Runtime, ELoadingPhase::Default, true);
+        PluginBaseDir / TEXT("Templates") / TEXT("Blank"), true, EHostType::Runtime, ELoadingPhase::Default);
 	
     const TSharedRef<FPluginTemplateDescription> CSharpOnlyTemplate = MakeShared<FCSPluginTemplateDescription>(CSharpOnlyTemplateName, CSharpOnlyDescription,
-        PluginBaseDir / TEXT("Templates") / TEXT("CSharpOnly"), true, EHostType::Runtime, ELoadingPhase::Default, false);
+        PluginBaseDir / TEXT("Templates") / TEXT("CSharpOnly"), true, EHostType::Runtime, ELoadingPhase::Default);
 
     PluginBrowser.RegisterPluginTemplate(BlankTemplate);
     PluginBrowser.RegisterPluginTemplate(CSharpOnlyTemplate);
@@ -731,8 +733,8 @@ void FUnrealSharpEditorModule::AddNewProject(const FString& ModuleName, const FS
 		return;
 	}
 	
-	AdditionalArguments.Add(TEXT("NewProjectName"), ModuleName);
-	AdditionalArguments.Add(TEXT("NewProjectFolder"), FCSUnrealSharpUtils::MakeQuotedPath(FPaths::ConvertRelativePathToFull(ProjectParentFolder)));
+	AdditionalArguments.Add(TEXT("ProjectName"), ModuleName);
+	AdditionalArguments.Add(TEXT("ProjectFolder"), FCSUnrealSharpUtils::MakeQuotedPath(FPaths::ConvertRelativePathToFull(ProjectParentFolder)));
 	
 	FString FullProjectRoot = FPaths::ConvertRelativePathToFull(ProjectRoot);
 	AdditionalArguments.Add(TEXT("ProjectRoot"), FCSUnrealSharpUtils::MakeQuotedPath(FullProjectRoot));

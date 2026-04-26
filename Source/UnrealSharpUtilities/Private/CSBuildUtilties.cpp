@@ -6,7 +6,7 @@
 #include "CSUnrealSharpUtilitiesSettings.h"
 #include "Interfaces/IPluginManager.h"
 
-bool UnrealSharp::Build::InvokeUnrealSharpBuildTool(const FString& BuildAction, const TMap<FString, FString>* AdditionalArguments, const FCSCommandError& OnError)
+bool UnrealSharp::Build::InvokeUnrealSharpBuildTool(const FString& BuildAction, const TMap<FString, FString>* ActionArgs, const FCSCommandError& OnError)
 {
 	const FString PluginFolder = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(UE_PLUGIN_NAME)->GetBaseDir());
 	const FString DotNetPath = Paths::GetDotNetExecutablePath();
@@ -20,10 +20,10 @@ bool UnrealSharp::Build::InvokeUnrealSharpBuildTool(const FString& BuildAction, 
 	Args += FString::Printf(TEXT(" --PluginDirectory \"%s\""), *PluginFolder);
 	Args += FString::Printf(TEXT(" --DotNetPath \"%s\""), *DotNetPath);
 
-	if (AdditionalArguments && AdditionalArguments->Num() > 0)
+	if (ActionArgs && ActionArgs->Num() > 0)
 	{
-		Args += TEXT(" --AdditionalArgs");
-		for (const auto& [Key, Value] : *AdditionalArguments)
+		Args += TEXT(" --ActionArgs");
+		for (const auto& [Key, Value] : *ActionArgs)
 		{
 			Args += FString::Printf(TEXT(" %s=%s"), *Key, *Value);
 		}

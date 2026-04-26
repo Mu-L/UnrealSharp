@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using UnrealBuildTool;
 using UnrealSharp.Shared;
@@ -14,7 +13,7 @@ public static class BuildUtilities
             return;
         }
         
-        ConsoleUtilities.Log("Engine glue has been modified since the last build. Rebuilding UnrealSharp bindings...");
+        ConsoleUtilities.Log("Engine glue has been modified since the last build. Rebuilding bindings...");
         DotNetUtilities.BuildSolution(Path.Combine(GeneratorStatics.ManagedPath, "UnrealSharp"));
     }
 }

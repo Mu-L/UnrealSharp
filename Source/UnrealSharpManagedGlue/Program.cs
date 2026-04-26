@@ -16,16 +16,19 @@ public static class Program
         USharpBuildToolUtilities.CompileUSharpBuildTool();
         
         ExportBindings();
-        PostExport();
+        
+        GlueModuleFactory.CreateGlueProjects();
+        BuildUtilities.BuildBindings();
     }
 
     private static void ExportBindings()
     {
-        Stopwatch stopwatch = Stopwatch.StartNew();
         ConsoleUtilities.Log("Starting C# bindings export...");
 
         try
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            
             GlueGenerator.GenerateBindings();
             
             TaskManager.WaitForTasks();
@@ -41,20 +44,6 @@ public static class Program
         {
             ConsoleUtilities.Log("Critical failure during export process:");
             ConsoleUtilities.Log(ex.ToString());
-        }
-    }
-
-    private static void PostExport()
-    {
-        try
-        {
-            GlueModuleFactory.CreateGlueProjects();
-            BuildUtilities.BuildBindings();
-        }
-        catch (Exception ex)
-        {
-            ConsoleUtilities.Log("Critical failure during post-export process:");
-            ConsoleUtilities.Log(ex.Message);
         }
     }
 }
